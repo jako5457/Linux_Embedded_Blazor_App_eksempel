@@ -7,10 +7,6 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <Folder Include="Temprature\" />
-  </ItemGroup>
-
-  <ItemGroup>
     <PackageReference Include="InfluxDB.Client" Version="4.0.0" />
     <PackageReference Include="InfluxDB.Client.Core" Version="4.0.0" />
     <PackageReference Include="InfluxDB.Client.Linq" Version="4.0.0" />

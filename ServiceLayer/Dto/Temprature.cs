@@ -1,4 +1,5 @@
-﻿using System;
+﻿using InfluxDB.Client.Core;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -6,12 +7,9 @@ using System.Threading.Tasks;
 
 namespace ServiceLayer.Dto
 {
-    public class TempratureDto
+    public class Temprature
     {
-        public DateTime Time { get; set; }
-
+        [Column("value")]
         public double TempratureC { get; set; }
-
-        public string Host { get; set; } = string.Empty;
     }
 }

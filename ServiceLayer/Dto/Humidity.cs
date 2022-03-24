@@ -7,15 +7,9 @@ using System.Threading.Tasks;
 
 namespace ServiceLayer.Dto
 {
-    public class HumidityDto
+    public class Humidity
     {
-        [Column("time")]
-        public DateTime Time { get; set; }
-
         [Column("value")]
         public int Humidity { get; set; }
-
-        [Column("tag")]
-        public string tag { get; set; } = string.Empty;
     }
 }
