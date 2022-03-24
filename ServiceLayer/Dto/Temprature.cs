@@ -7,9 +7,11 @@ using System.Threading.Tasks;
 
 namespace ServiceLayer.Dto
 {
-    public class Temprature
+    public class Temprature : MeasurementBase
     {
+        public static new string BaseTag { get; protected set; } = "TempratureC";
+
         [Column("value")]
-        public double TempratureC { get; set; }
+        public double tempratureC { get; set; }
     }
 }

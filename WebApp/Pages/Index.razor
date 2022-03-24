@@ -1,0 +1,37 @@
+﻿@page "/"
+@inject IMeasurementService<Humidity> HumidityService
+@inject IMeasurementService<Temprature> TempratureService
+
+<PageTitle>Index</PageTitle>
+
+<h1>Hello, world!</h1>
+
+<p>Temprature: @LatestTemp.tempratureC C</p>
+<p>Humidity: @LatestHum.humidity %</p>
+
+Welcome to your new app.
+
+@code{
+    Humidity LatestHum = new Humidity();
+    Temprature LatestTemp = new Temprature();
+
+    protected override async Task OnInitializedAsync()
+    {
+        LatestHum = await HumidityService.GetLatestAsync("Humidity");
+        LatestTemp = await TempratureService.GetLatestAsync("TempratureC");
+
+        if (LatestHum == null)
+        {
+            LatestHum = new Humidity();
+        }
+
+        if (LatestTemp == null)
+        {
+            LatestTemp = new Temprature();
+        }
+
+       
+
+    }
+
+}

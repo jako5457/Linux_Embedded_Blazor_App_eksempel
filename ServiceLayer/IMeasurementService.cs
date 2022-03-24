@@ -10,7 +10,7 @@ namespace ServiceLayer
     public interface IMeasurementService<T> where T : MeasurementBase
     {
 
-        public Task<List<T>> GetMeasurementsAsync(string Tag,DateTime start, DateTime? end = null);
+        public Task<List<T>> GetMeasurementsAsync(string Tag, DateTime start, DateTime? end = null);
 
         public Task<T> GetLatestAsync(string Tag);
 

@@ -14,25 +14,25 @@ namespace ServiceLayer
 
         private InfluxDBClient _client;
 
-        public MeasurementService(InfluxDBClientOptions InfluxClientOptions)
+        public MeasurementService(InfluxDBClientOptions.Builder builder)
         {
-            _client = InfluxDBClientFactory.Create(InfluxClientOptions);
+            _client = InfluxDBClientFactory.Create(builder.Build());
         }
 
         public Task<T> GetLatestAsync(string Tag)
         {
-            var queryapi = _client.GetQueryApi();
+            var queryapi = _client.GetQueryApiSync();
             var result = from h in InfluxDBQueryable<T>.Queryable("TempratureData", "MyOrg", queryapi)
-                         where h.Tag == "Humidity"
+                         where h.Tag == Tag
                          select h;
 
-            return Task.FromResult(result.FirstOrDefault());
+            return Task.FromResult(result.ToList().LastOrDefault());
         }
 
 
         public Task<List<T>> GetMeasurementsAsync(string Tag, DateTime start, DateTime? end = null)
         {
-            var queryapi = _client.GetQueryApi();
+            var queryapi = _client.GetQueryApiSync();
 
             if (end == null)
             {

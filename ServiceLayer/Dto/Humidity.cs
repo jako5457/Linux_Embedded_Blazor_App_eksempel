@@ -7,9 +7,17 @@ using System.Threading.Tasks;
 
 namespace ServiceLayer.Dto
 {
-    public class Humidity
+    public class Humidity : MeasurementBase
     {
+
+        public static new string BaseTag { get; protected set; } = "Humidity";
+
+        public Humidity()
+        {
+            BaseTag = "Humidity";
+        }
+
         [Column("value")]
-        public int Humidity { get; set; }
+        public int humidity { get; set; }
     }
 }
