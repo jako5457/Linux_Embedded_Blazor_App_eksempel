@@ -3,12 +3,18 @@ using Microsoft.AspNetCore.Components.Web;
 using InfluxDB.Client;
 using ServiceLayer.Dto;
 using ServiceLayer;
+using Radzen;
 
 var builder = WebApplication.CreateBuilder(args);
 
 // Add services to the container.
 builder.Services.AddRazorPages();
 builder.Services.AddServerSideBlazor();
+
+builder.Services.AddScoped<DialogService>();
+builder.Services.AddScoped<NotificationService>();
+builder.Services.AddScoped<TooltipService>();
+builder.Services.AddScoped<ContextMenuService>();
 
 builder.Services.AddTransient<InfluxDBClientOptions.Builder>(b => new InfluxDBClientOptions.Builder()
                                                              .Url(builder.Configuration.GetValue<string>("influx:url"))
