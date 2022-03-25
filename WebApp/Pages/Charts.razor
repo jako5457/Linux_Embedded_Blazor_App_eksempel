@@ -1,0 +1,45 @@
+﻿@page "/charts"
+@inject IMeasurementService<Humidity> HumidityService
+@inject IMeasurementService<Temprature> TempratureService
+
+<PageTitle>Charts</PageTitle>
+
+<RadzenButton style="width: 160px" BusyText="Opdaterer..." IsBusy=@Isbusy Click=@Update Text="Opdater" />
+
+
+<RadzenChart>
+    <RadzenLineSeries Smooth="true" Stroke="blue" Data="@Humidities" CategoryProperty="Time" Title="Hum %" LineType="LineType.Solid" ValueProperty="humidity">
+        <RadzenMarkers MarkerType="MarkerType.None" />
+        <RadzenCategoryAxis Formatter=@(value => ((DateTime)value).ToString("dd/MM hh:mm"))/>
+    </RadzenLineSeries>
+</RadzenChart>
+
+<RadzenChart>
+    <RadzenLineSeries Smooth="true" Stroke="red" Data="@Tempratures" CategoryProperty="Time" Title="Temp °C" LineType="LineType.Solid" ValueProperty="tempratureC">
+        <RadzenMarkers MarkerType="MarkerType.None" />
+        <RadzenCategoryAxis Formatter=@(value => ((DateTime)value).ToString("dd/MM hh:mm"))/>
+    </RadzenLineSeries>
+</RadzenChart>
+
+
+@code {
+    public bool Isbusy = false;
+
+    List<Humidity> Humidities = new List<Humidity>();
+    List<Temprature> Tempratures = new List<Temprature>();
+
+    protected async override Task OnInitializedAsync()
+    {
+        await Update();
+        await base.OnInitializedAsync();
+    }
+
+    public async Task Update()
+    {
+        Isbusy = true;
+        StateHasChanged();
+        Humidities = await HumidityService.GetMeasurementsAsync("Humidity", DateTime.Now.AddHours(-2));
+        Tempratures = await TempratureService.GetMeasurementsAsync("TempratureC",DateTime.Now.AddHours(-2));
+        Isbusy = false;
+    }
+}

@@ -4,6 +4,8 @@
 
 <PageTitle>Index</PageTitle>
 
+<RadzenButton style="width: 160px" BusyText="Opdaterer..." IsBusy=@Isbusy Click=@Update Text="Opdater" />
+
 <div class="row">
     <div class="col-md-6 col-sm-12">
         <RadzenArcGauge Style="width: 100%; height: 250px;">
@@ -37,11 +39,18 @@
     Humidity LatestHum = new Humidity();
     Temprature LatestTemp = new Temprature();
 
+    public bool Isbusy { get; set; } = false;
+
     protected override async Task OnInitializedAsync()
     {
+        await Update();
+    }
+
+    public async Task Update()
+    {
+        Isbusy = true;
         LatestHum = await HumidityService.GetLatestAsync("Humidity");
         LatestTemp = await TempratureService.GetLatestAsync("TempratureC");
-
         if (LatestHum == null)
         {
             LatestHum = new Humidity();
@@ -51,9 +60,7 @@
         {
             LatestTemp = new Temprature();
         }
-
-       
-
+        Isbusy = false;
     }
 
 }
