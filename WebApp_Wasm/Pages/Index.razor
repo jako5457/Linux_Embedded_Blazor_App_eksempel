@@ -1,0 +1,66 @@
+﻿@page "/"
+@using MQTTnet;
+@using MQTTnet.Client.Options
+@using MQTTnet.Extensions
+
+<PageTitle>Index</PageTitle>
+
+<p>Message:</p>
+<input type="text" @bind-value="message" />
+<br />
+<p>Topic:</p>
+<input type="text" @bind-value="Topic"/>
+<br />
+<p>Qos</p>
+<input type="number" min="0" max="2" @bind-value="qos" />
+<button @onclick="send" >Send Topic</button>
+
+@code{
+    public string message { get; set; } = "";
+
+    public string Topic { get; set; } = "hello/world";
+
+    public int qos { get; set; } = 0;
+
+    public async void send()
+    {
+        var mqttFactory = new MqttFactory();
+
+        using (var mqttClient = mqttFactory.CreateMqttClient())
+        {
+            var mqttClientOptions = new MqttClientOptionsBuilder()
+                                        .WithWebSocketServer("ws://10.135.71.158:15675/ws")
+                                        .Build();
+
+            var response = await mqttClient.ConnectAsync(mqttClientOptions, CancellationToken.None);
+
+            MqttApplicationMessage mqttmessage = new MqttApplicationMessage()
+                {
+                    ContentType = "",
+                    Payload = System.Text.Encoding.UTF8.GetBytes(message),
+                    Topic = Topic
+                };
+
+            switch (qos)
+            {
+                case 0:
+                    mqttmessage.QualityOfServiceLevel = MQTTnet.Protocol.MqttQualityOfServiceLevel.AtLeastOnce;
+                    break;
+                case 1:
+                    mqttmessage.QualityOfServiceLevel = MQTTnet.Protocol.MqttQualityOfServiceLevel.AtMostOnce;
+                    break;
+                case 2:
+                    mqttmessage.QualityOfServiceLevel = MQTTnet.Protocol.MqttQualityOfServiceLevel.ExactlyOnce;
+                    break;
+                default:
+                    mqttmessage.QualityOfServiceLevel = MQTTnet.Protocol.MqttQualityOfServiceLevel.AtLeastOnce;
+                    break;
+            }
+
+            await mqttClient.PublishAsync(mqttmessage,CancellationToken.None);
+        }
+    }
+
+}
+
+
