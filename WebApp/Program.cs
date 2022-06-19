@@ -21,8 +21,8 @@ builder.Services.AddTransient<InfluxDBClientOptions.Builder>(b => new InfluxDBCl
                                                              .AuthenticateToken(builder.Configuration.GetValue<string>("influx:token"))
                                                             );
 
-builder.Services.AddTransient<IMeasurementService<Temprature>, MeasurementService<Temprature>>(s => new MeasurementService<Temprature>(s.GetRequiredService<InfluxDBClientOptions>(),builder.Configuration.GetValue<string>("influx:org"), builder.Configuration.GetValue<string>("influx:bucket")));
-builder.Services.AddTransient<IMeasurementService<Humidity>, MeasurementService<Humidity>>();
+builder.Services.AddTransient<IMeasurementService<Temprature>, MeasurementService<Temprature>>(s => new MeasurementService<Temprature>(s.GetRequiredService<InfluxDBClientOptions.Builder>(), builder.Configuration.GetValue<string>("influx:org"), builder.Configuration.GetValue<string>("influx:bucket")));
+builder.Services.AddTransient<IMeasurementService<Humidity>, MeasurementService<Humidity>>(s => new MeasurementService<Humidity>(s.GetRequiredService<InfluxDBClientOptions.Builder>(), builder.Configuration.GetValue<string>("influx:org"), builder.Configuration.GetValue<string>("influx:bucket")));
 
 var app = builder.Build();
 

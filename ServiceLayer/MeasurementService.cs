@@ -19,6 +19,8 @@ namespace ServiceLayer
         public MeasurementService(InfluxDBClientOptions.Builder builder,string org,string bucket)
         {
             _Client = InfluxDBClientFactory.Create(builder.Build());
+            _Bucket = bucket;
+            _Org = org;
         }
 
         public Task<T> GetLatestAsync(string Tag)
