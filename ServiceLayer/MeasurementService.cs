@@ -12,34 +12,35 @@ namespace ServiceLayer
     public class MeasurementService<T> : IMeasurementService<T> where T : MeasurementBase
     {
 
-        private InfluxDBClient _client;
+        private InfluxDBClient _Client;
+        private string _Bucket = "";
+        private string _Org = "";
 
-        public MeasurementService(InfluxDBClientOptions.Builder builder)
+        public MeasurementService(InfluxDBClientOptions.Builder builder,string org,string bucket)
         {
-            _client = InfluxDBClientFactory.Create(builder.Build());
+            _Client = InfluxDBClientFactory.Create(builder.Build());
         }
 
         public Task<T> GetLatestAsync(string Tag)
         {
-            var queryapi = _client.GetQueryApiSync();
-            var result = from h in InfluxDBQueryable<T>.Queryable("TempratureData", "MyOrg", queryapi)
+            var queryapi = _Client.GetQueryApiSync();
+            var result = from h in InfluxDBQueryable<T>.Queryable(_Bucket,_Org, queryapi)
                          where h.Tag == Tag
                          select h;
 
             return Task.FromResult(result.ToList().LastOrDefault());
         }
 
-
         public Task<List<T>> GetMeasurementsAsync(string Tag, DateTime start, DateTime? end = null)
         {
-            var queryapi = _client.GetQueryApiSync();
+            var queryapi = _Client.GetQueryApiSync();
 
             if (end == null)
             {
                 end = DateTime.Now;
             }
 
-            var query = from h in InfluxDBQueryable<T>.Queryable("TempratureData", "MyOrg", queryapi)
+            var query = from h in InfluxDBQueryable<T>.Queryable(_Bucket, _Org, queryapi)
                         where h.Time > start
                         where h.Time < end
                         where h.Tag == Tag
